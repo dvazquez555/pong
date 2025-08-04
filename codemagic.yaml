@@ -7,9 +7,15 @@ workflows:
       vars:
         PACKAGE_NAME: "com.example.pong"
     scripts:
+      - name: Install dependencies
+        script: |
+          python -m pip install --upgrade pip setuptools
+          python -m pip install cython==0.29.19
+          python -m pip install buildozer
+          python -m pip install setuptools==65.5.0  # Version with distutils
       - name: Build APK
         script: |
-          pip install buildozer
-          buildozer android debug
+          buildozer init
+          buildozer -v android debug
     artifacts:
       - bin/*.apk
