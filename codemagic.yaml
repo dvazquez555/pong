@@ -7,15 +7,29 @@ workflows:
       vars:
         PACKAGE_NAME: "com.example.pong"
     scripts:
-      - name: Install dependencies
+      - name: Setup Python environment
         script: |
-          python -m pip install --upgrade pip setuptools
-          python -m pip install cython==0.29.19
-          python -m pip install buildozer
-          python -m pip install setuptools==65.5.0  # Version with distutils
+          # Force Python 3.11 (which includes distutils)
+          pyenv install 3.11.9 --skip-existing
+          pyenv global 3.11.9
+          
+          # Install required packages
+          python -m pip install --upgrade pip
+          python -m pip install setuptools==65.5.0 cython==0.29.19 buildozer
+          
+          # Set environment variables
+          export SETUPTOOLS_USE_DISTUTILS=stdlib
+          export PATH=$HOME/.local/bin:$PATH
+          
       - name: Build APK
         script: |
           buildozer init
+          # Edit buildozer.spec with your requirements
+          sed -i '' 's/^requirements =.*/requirements = kivy, python3/' buildozer.spec
           buildozer -v android debug
     artifacts:
       - bin/*.apk
+    publishing:
+      email:
+        recipients:
+          - your-email@example.com
