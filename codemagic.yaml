@@ -2,28 +2,14 @@ workflows:
   build_kivy_apk:
     name: Build Kivy APK
     environment:
-      docker:
-        image: "kivy/kivy:latest"
       groups:
         - kivy_android
       vars:
-        PACKAGE_NAME: "com.yourdomain.pong"
-        APP_VERSION: "1.0.0"
-    triggering:
-      events:
-        - push
+        PACKAGE_NAME: "com.example.pong"
     scripts:
-      - name: Install dependencies
-        script: |
-          pip install --upgrade pip setuptools
-          pip install buildozer cython==0.29.19
       - name: Build APK
         script: |
-          buildozer init
-          buildozer -v android debug
+          pip install buildozer
+          buildozer android debug
     artifacts:
       - bin/*.apk
-    publishing:
-      email:
-        recipients:
-          - your-email@example.com
